@@ -51,7 +51,28 @@ function validateFieldObject(obj, field = undefined, invalidValues = []) {
     return true;
 }
 
-function findData(object, field, validateField = undefined, invalidValuesForValidatingField = []) {
+function sortStrings(a, b) {
+    return a.localeCompare(b);
+}
+
+function sortByField(elements, field) {
+    return elements.sort((a,b) => {
+        const first = a[field];
+        const second = b[field];
+        if (typeof first === "string" && typeof second === "string") {
+            return sortStrings(first, second);
+        } else return 1;
+    })
+}
+
+const defaultOptions = {
+    validateField: undefined,
+    invalidValuesForValidatingField: [],
+    sortResultByField: undefined,
+}
+
+function findData(object, field, options = defaultOptions) {
+    const { validateField, invalidValuesForValidatingField, sortResultByField } = options
     if (typeof object !== "object" || object === undefined || object === null) {
         return new Error("Current object is not object");
     }
@@ -61,7 +82,7 @@ function findData(object, field, validateField = undefined, invalidValuesForVali
         const objValue = pair[1];
         if (objField === field) {
             if (Array.isArray(objValue)) {
-                return objValue.filter(el => validateFieldObject(el, validateField, invalidValuesForValidatingField));
+                return sortByField(objValue.filter(el => validateFieldObject(el, validateField, invalidValuesForValidatingField)), sortResultByField);
             } else {
                 throw new Error("value is not an array");
             }
@@ -69,7 +90,7 @@ function findData(object, field, validateField = undefined, invalidValuesForVali
             if (Array.isArray(objValue)) {
                 let result = null;
                 for(const el of objValue) {
-                    result = findData(el, field, validateField, invalidValuesForValidatingField);
+                    result = findData(el, field, options);
                     if (result?.length) {
                         return result;
                     }
@@ -80,4 +101,8 @@ function findData(object, field, validateField = undefined, invalidValuesForVali
     return [];
 }
 
-console.log(findData(data, "tree_3", "name", ["empty"]));
+console.log(findData(data, "tree_3", { 
+    validateField: "name", 
+    invalidValuesForValidatingField: ["empty"],
+    sortResultByField: "name" 
+}));
