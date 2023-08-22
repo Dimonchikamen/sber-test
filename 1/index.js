@@ -33,6 +33,7 @@ const data = {
   ],
 };
 
+//#region helpers
 function validateFieldObject(obj, field = undefined, invalidValues = []) {
     if (typeof obj !== "object") {
         return false;
@@ -64,6 +65,7 @@ function sortByField(elements, field) {
         } else return 1;
     })
 }
+//#endregion
 
 const defaultOptions = {
     validateField: undefined,
@@ -71,6 +73,8 @@ const defaultOptions = {
     sortResultByField: undefined,
 }
 
+
+// result function
 function findData(object, field, options = defaultOptions) {
     const { validateField, invalidValuesForValidatingField, sortResultByField } = options
     if (typeof object !== "object" || object === undefined || object === null) {
