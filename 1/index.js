@@ -33,9 +33,13 @@ const data = {
   ],
 };
 
-function validateFieldObject(obj, field, invalidValues = []) {
+function validateFieldObject(obj, field = undefined, invalidValues = []) {
     if (typeof obj !== "object") {
         return false;
+    }
+
+    if (field === undefined) {
+        return true;
     }
 
     const value = obj[field];
@@ -47,7 +51,7 @@ function validateFieldObject(obj, field, invalidValues = []) {
     return true;
 }
 
-function findData(object, field) {
+function findData(object, field, validateField = undefined, invalidValuesForValidatingField = []) {
     if (typeof object !== "object" || object === undefined || object === null) {
         return new Error("Current object is not object");
     }
@@ -57,7 +61,7 @@ function findData(object, field) {
         const objValue = pair[1];
         if (objField === field) {
             if (Array.isArray(objValue)) {
-                return objValue.filter(el => validateFieldObject(el, "name", ["empty"]));
+                return objValue.filter(el => validateFieldObject(el, validateField, invalidValuesForValidatingField));
             } else {
                 throw new Error("value is not an array");
             }
@@ -65,7 +69,7 @@ function findData(object, field) {
             if (Array.isArray(objValue)) {
                 let result = null;
                 for(const el of objValue) {
-                    result = findData(el, field);
+                    result = findData(el, field, validateField, invalidValuesForValidatingField);
                     if (result?.length) {
                         return result;
                     }
@@ -76,4 +80,4 @@ function findData(object, field) {
     return [];
 }
 
-console.log(findData(data, "tree_3"));
+console.log(findData(data, "tree_3", "name", ["empty"]));
