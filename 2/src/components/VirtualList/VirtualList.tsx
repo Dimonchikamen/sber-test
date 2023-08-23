@@ -38,7 +38,7 @@ export const VirtualList = memo(({
     const [endRenderIndex, setEndRenderIndex] = useState(indexDelta + renderBuffer);
     const listHeight = itemHeight * itemCount;
 
-    const wheelhandler = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const scrollHandler = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
         //@ts-ignore
         const { scrollTop } = e.target;
         const previousElementsCount = Math.ceil(scrollTop / itemHeight);
@@ -66,7 +66,7 @@ export const VirtualList = memo(({
         <div
             className={s.container}
             style={{ height, width }}
-            onScroll={wheelhandler}
+            onScroll={scrollHandler}
         >
             <ul className={s.list} style={{ height: listHeight, maxHeight: listHeight }}>
                 {renderItems()}
