@@ -24,6 +24,7 @@ function App() {
                 itemRender={({ index }) => (
                     <Item item={data[index]} />
                 )}
+                renderBuffer={3}
             />
         </div>
     );
