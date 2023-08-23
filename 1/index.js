@@ -73,7 +73,6 @@ const defaultOptions = {
     sortResultByField: undefined,
 }
 
-
 // result function
 function findData(object, field, options = defaultOptions) {
     const { validateField, invalidValuesForValidatingField, sortResultByField } = options
