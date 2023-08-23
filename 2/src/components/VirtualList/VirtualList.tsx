@@ -2,6 +2,7 @@ import React, { memo, useCallback, ReactElement, useState } from "react";
 import { useDebounce } from "../../helpers/useDebounce";
 
 import s from "./VirtualList.module.css";
+import { VirtualListItem } from "./VirtualListItem";
 
 type VirtualListProps = {
     itemCount: number;
@@ -26,6 +27,7 @@ export const VirtualList = memo(
         const [endRenderIndex, setEndRenderIndex] = useState(
             indexDelta + renderBuffer
         );
+        // Можно и убрать deobunce, тогда ux будет лучше (всё будет сразу рендерится красиво), однако много лишних перерендеров будет
         const debouncedStartRenderIndex = useDebounce(startRenderIndex, 150);
         const debouncedEndRenderIndex = useDebounce(endRenderIndex, 150);
         const listHeight = itemHeight * itemCount;
@@ -57,19 +59,11 @@ export const VirtualList = memo(
                 i++
             ) {
                 result.push(
-                    <li
-                        className={s.list_item}
-                        key={`item-${i}`}
-                        style={{
-                            height: itemHeight,
-                            position: "absolute",
-                            top: i * itemHeight,
-                        }}
-                    >
-                        {itemRender({
-                            index: i,
-                        })}
-                    </li>
+                    <VirtualListItem
+                        index={i}
+                        itemHeight={itemHeight}
+                        itemRender={itemRender}
+                    />
                 );
             }
             return result;
