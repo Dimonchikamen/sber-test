@@ -5,3 +5,7 @@
 .list {
     position: relative;
 }
+
+.list > .list_item {
+    width: 100%;
+}

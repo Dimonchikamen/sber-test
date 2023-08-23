@@ -1,25 +1,11 @@
-import React, {
-    memo,
-    useCallback,
-    ReactElement,
-    CSSProperties,
-    useState,
-} from "react";
+import React, { memo, useCallback, ReactElement, useState } from "react";
 import { useDebounce } from "../../helpers/useDebounce";
 
 import s from "./VirtualList.module.css";
 
 type VirtualListProps = {
     itemCount: number;
-    itemRender: ({
-        index,
-        key,
-        style,
-    }: {
-        index: number;
-        key: string;
-        style: CSSProperties;
-    }) => ReactElement;
+    itemRender: ({ index }: { index: number }) => ReactElement;
     itemHeight?: number;
     height?: number;
     width?: number;
@@ -65,17 +51,25 @@ export const VirtualList = memo(
 
         const renderItems = () => {
             const result = [];
-            for (let i = debouncedStartRenderIndex; i < debouncedEndRenderIndex; i++) {
+            for (
+                let i = debouncedStartRenderIndex;
+                i < debouncedEndRenderIndex;
+                i++
+            ) {
                 result.push(
-                    itemRender({
-                        index: i,
-                        key: `item-${i}`,
-                        style: {
+                    <li
+                        className={s.list_item}
+                        key={`item-${i}`}
+                        style={{
                             height: itemHeight,
                             position: "absolute",
                             top: i * itemHeight,
-                        },
-                    })
+                        }}
+                    >
+                        {itemRender({
+                            index: i,
+                        })}
+                    </li>
                 );
             }
             return result;

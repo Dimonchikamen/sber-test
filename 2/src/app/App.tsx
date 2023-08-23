@@ -21,8 +21,8 @@ function App() {
                 height={250}
                 width={400}
                 itemCount={data.length}
-                itemRender={({ index, key, style }) => (
-                    <Item key={key} item={data[index]} style={style} />
+                itemRender={({ index }) => (
+                    <Item item={data[index]} />
                 )}
             />
         </div>

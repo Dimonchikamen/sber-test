@@ -10,8 +10,8 @@ type ItemProps = {
 
 export const Item: FC<ItemProps> = ({ item, style }) => {
     return (
-        <li className={s.list_item} style={style}>
+        <div className={s.list_item} style={style}>
             {item.number}
-        </li>
+        </div>
     )
 }
