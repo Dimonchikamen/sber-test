@@ -52,27 +52,17 @@ function validateFieldObject(obj, field = undefined, invalidValues = []) {
     return true;
 }
 
-function compareNumbersAsc(a, b) {
-    if (typeof a !== "number" || typeof b !== "number") {
-        return new Error("the one of arguments is not a number");
+function compareStrings(a, b) {
+    if (a.length > b.length) {
+        return -1
+    } else if (a.length < b.length) {
+        return 1;
+    } else {
+        return b.localeCompare(a);
     }
-
-    return b - a;
 }
 
-function sortStrings(a, b, validStart = "") {
-    const firstLastStartIndex = a.indexOf(validStart[validStart.length - 1]);
-    const first = Number(a.slice(firstLastStartIndex + 1));
-    const secondLastStartIndex = b.indexOf(validStart[validStart.length - 1]);
-    const second = Number(b.slice(secondLastStartIndex + 1));
-    if (isNaN(first) || isNaN(second)) {
-        return a.localeCompare(b);
-    }
-    
-    return compareNumbersAsc(first, second);
-}
-
-function sortByField(elements, field, validStart="") {
+function sortByField(elements, field) {
     if (field === undefined) {
         return elements;
     }
@@ -83,7 +73,7 @@ function sortByField(elements, field, validStart="") {
         const first = a[field];
         const second = b[field];
         if (typeof first === "string" && typeof second === "string") {
-            return sortStrings(first, second, validStart);
+            return compareStrings(first, second);
         } else return 0;
     })
 }
@@ -93,12 +83,11 @@ const defaultOptions = {
     validateField: undefined,
     invalidValuesForValidatingField: [],
     sortResultByField: undefined,
-    validStartFieldValue: "",
 }
 
 // result function
 function findData(object, field, options = defaultOptions) {
-    const { validateField, invalidValuesForValidatingField, sortResultByField, validStartFieldValue } = options
+    const { validateField, invalidValuesForValidatingField, sortResultByField } = options
     if (typeof object !== "object" || object === undefined || object === null) {
         return new Error("Current object is not object");
     }
@@ -111,7 +100,6 @@ function findData(object, field, options = defaultOptions) {
                 return sortByField(
                     objValue.filter(el => validateFieldObject(el, validateField, invalidValuesForValidatingField)), 
                     sortResultByField,
-                    validStartFieldValue,
                     );
             } else {
                 throw new Error("value is not an array");
@@ -135,5 +123,4 @@ console.log(findData(data, "tree_3", {
     validateField: "name", 
     invalidValuesForValidatingField: ["empty"],
     sortResultByField: "name",
-    validStartFieldValue: "name"
 }));
