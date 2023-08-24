@@ -77,7 +77,9 @@ function sortByField(elements, field, validStart="") {
         return elements;
     }
 
-    return elements.sort((a,b) => {
+    const result = [...elements];
+
+    return result.sort((a,b) => {
         const first = a[field];
         const second = b[field];
         if (typeof first === "string" && typeof second === "string") {
